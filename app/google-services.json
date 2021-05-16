@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "542897677816",
+    "project_id": "game-base-ba4cd",
+    "storage_bucket": "game-base-ba4cd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:542897677816:android:0abd01eb837357768f220d",
+        "android_client_info": {
+          "package_name": "com.example.gamebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "542897677816-781or1lokgk058679hdbka3sc71ambva.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPbj4TlmHXgUGfdIFYTpYiUu4l5Opy768"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "542897677816-781or1lokgk058679hdbka3sc71ambva.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
