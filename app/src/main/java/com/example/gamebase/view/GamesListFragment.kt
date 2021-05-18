@@ -5,23 +5,33 @@ import android.content.DialogInterface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.InputType
-import android.view.Gravity
+import android.util.Log
+import android.view.*
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.widget.*
+import android.widget.LinearLayout.TEXT_ALIGNMENT_CENTER
+import android.widget.LinearLayout.VERTICAL
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.children
+import androidx.core.view.marginTop
+import androidx.core.view.setPadding
+import androidx.core.view.size
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gamebase.R
 import com.example.gamebase.model.Game
+import com.example.gamebase.repository.Repository
 import com.example.gamebase.viewModel.GamesListAdapter
+import com.example.gamebase.viewModel.UserViewModel
+import com.example.gamebase.viewModel.UserViewModelFactory
 import com.firebase.ui.auth.AuthUI
+import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.textfield.TextInputLayout.END_ICON_CLEAR_TEXT
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import java.io.Console
@@ -47,6 +57,8 @@ class GamesListFragment : Fragment() {
     private lateinit var myLayoutManager: LinearLayoutManager
     private lateinit var databaseReference: DatabaseReference
     private lateinit var gamesList: ArrayList<Game>
+    private lateinit var userViewModel: UserViewModel
+    private lateinit var newGame: MutableLiveData<Game>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,12 +77,15 @@ class GamesListFragment : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 gamesList = ArrayList()
                 for(row in snapshot.children){
-                    if(row.key == FirebaseAuth.getInstance().currentUser.uid){
-                    for(innerRow in row.children) {
-                        val newRow = innerRow.getValue(Game::class.java)
-                        gamesList.add(newRow!!)
-                    }
-                        break
+                    if(FirebaseAuth.getInstance().currentUser != null) {
+                        if (row.key == FirebaseAuth.getInstance().currentUser.uid) {
+                            for (innerRow in row.children) {
+                                if (innerRow.key != null && innerRow.value != "") {
+                                    val newRow = innerRow.getValue(Game::class.java)
+                                    gamesList.add(newRow!!)
+                                }
+                            }
+                        }
                     }
                 }
                 setAdapter(gamesList)
@@ -79,7 +94,7 @@ class GamesListFragment : Fragment() {
     }
 
     private fun setAdapter(games: ArrayList<Game>){
-        recyclerView.adapter = GamesListAdapter(games, databaseReference)
+        recyclerView.adapter = GamesListAdapter(games, databaseReference, this)
     }
 
     override fun onCreateView(
@@ -90,7 +105,11 @@ class GamesListFragment : Fragment() {
         myLayoutManager = LinearLayoutManager(context)
         gamesList = ArrayList()
 
-        myadapter = GamesListAdapter(gamesList, databaseReference)
+        myadapter = GamesListAdapter(gamesList, databaseReference, this)
+
+        val repository = Repository()
+        val viewModelFactory = UserViewModelFactory(repository)
+        userViewModel = ViewModelProvider(this, viewModelFactory).get(UserViewModel::class.java)
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_games_list, container, false)
@@ -98,6 +117,10 @@ class GamesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        var toolbar = requireActivity().findViewById<Toolbar>(R.id.custom_toolbar)
+        toolbar.menu.getItem(2).isVisible = true
+
 
         recyclerView = view.findViewById<RecyclerView>(R.id.games_recyclerview).apply {
             this.layoutManager = myLayoutManager
@@ -107,26 +130,81 @@ class GamesListFragment : Fragment() {
         view.findViewById<Button>(R.id.add_button).setOnClickListener {
             val builder = AlertDialog.Builder(context)
             builder.setTitle("What game do you want to add?")
-            val titleInput = EditText(context)
-            titleInput.setHint("Enter title")
-            titleInput.width = 800
-            val noteInput = EditText(context)
-            noteInput.setHint("Enter note (Optional)")
-            noteInput.width = 800
-            val twoInputs = LinearLayout(context)
-            twoInputs.addView(titleInput)
-            twoInputs.addView(noteInput)
-            twoInputs.orientation = LinearLayout.VERTICAL
-            twoInputs.gravity = Gravity.CENTER
-            builder.setView(twoInputs)
+
+            val relativeLayout = LinearLayout(requireContext())
+            relativeLayout.minimumHeight = LinearLayout.LayoutParams.MATCH_PARENT
+            relativeLayout.minimumWidth = LinearLayout.LayoutParams.MATCH_PARENT
+            relativeLayout.orientation = VERTICAL
+
+            val title = EditText(requireContext())
+            title.layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+
+            title.layoutParams.height = 180
+            title.minimumHeight = 180
+            title.setPadding(0,50,0,0)
+
+            val titleLayout = TextInputLayout(requireContext())
+            titleLayout.hint = "Title"
+            titleLayout.endIconMode = END_ICON_CLEAR_TEXT
+            titleLayout.layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            titleLayout.setPadding(40,0,40, 40)
+            titleLayout.gravity = Gravity.CENTER_VERTICAL
+
+            val editText = EditText(requireContext())
+            editText.layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+
+            editText.layoutParams.height = 180
+            editText.minimumHeight = 180
+            editText.setPadding(0,50,0,0)
+
+
+            val textInputLayout = TextInputLayout(requireContext())
+            textInputLayout.hint = "Note (Optional)"
+            textInputLayout.endIconMode = END_ICON_CLEAR_TEXT
+            textInputLayout.layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            textInputLayout.setPadding(40,0,40, 40)
+            textInputLayout.gravity = Gravity.CENTER_VERTICAL
+
+            titleLayout.addView(title)
+            relativeLayout.addView(titleLayout)
+            textInputLayout.addView(editText)
+            relativeLayout.addView(textInputLayout)
+            builder.setView(relativeLayout)
 
             builder.setPositiveButton("Add", DialogInterface.OnClickListener { dialog, which ->
-                val title = titleInput.text.toString()
-                val note = noteInput.text.toString()
+                val title = title.text.toString()
+                val note = editText.text.toString()
                 val played = false
                 val key = Date().time
-                val firebaseInput = Game(key.toString(), title, note, played)
-                databaseReference.child(FirebaseAuth.getInstance().currentUser.uid).child("${key}").setValue(firebaseInput)
+
+                newGame = MutableLiveData(Game(key = key.toString(), title = title, note = note, played = played))
+
+                userViewModel.getGame(title.toLowerCase().replace(' ', '-'))
+                userViewModel.gameResponse.observe(viewLifecycleOwner, Observer{ response->
+                    if(response.isSuccessful){
+                        Log.d("Response", response.body()!!.description.toString())
+                        newGame.value = Game(key = key.toString(), title = title, releaseYear = response.body()!!.released.toString(), imageUrl = response.body()!!.background_image.toString(), description = response.body()!!.description.toString(), genres = response.body()!!.genres, note = note, played = played)
+                    }
+                    else{
+                        Log.e("Adding response failed", response.errorBody().toString())
+                        newGame.value = Game(key = key.toString(), title = title, note = note, played = played)
+                    }
+                })
+                newGame.observe(viewLifecycleOwner, Observer { game ->
+                    databaseReference.child(FirebaseAuth.getInstance().currentUser.uid).child("${key}").setValue(game)
+                })
             })
             builder.show()
         }
@@ -152,3 +230,4 @@ class GamesListFragment : Fragment() {
             }
     }
 }
+

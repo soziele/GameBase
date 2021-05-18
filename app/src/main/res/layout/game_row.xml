@@ -4,11 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="#00FFFFFF">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -19,37 +21,32 @@
                 android:id="@+id/title_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="?attr/colorControlHighlight"
+                android:backgroundTintMode="add"
                 android:elevation="5dp"
                 android:orientation="horizontal">
 
                 <CheckBox
                     android:id="@+id/played_box"
-                    style="@android:style/Widget.Material.Light.CompoundButton.CheckBox"
+                    style="@style/Widget.AppCompat.CompoundButton.CheckBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:gravity="center" />
+                    android:buttonTint="?attr/colorSecondaryVariant"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:shadowColor="?android:attr/textColor" />
 
                 <TextView
                     android:id="@+id/game_title"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
                     android:layout_weight="1"
                     android:text="Gothic"
-                    android:textColor="#000000" />
-
-                <ImageButton
-                    android:id="@+id/delete_button"
-                    android:layout_width="20dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="10dp"
-                    android:adjustViewBounds="false"
-                    android:background="#00FFFFFF"
-                    android:cropToPadding="false"
-                    android:scaleType="centerInside"
-                    android:scaleX="1"
-                    android:scaleY="1"
-                    app:srcCompat="@drawable/delete" />
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -58,60 +55,74 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:background="#CBD9DF"
+                android:background="?attr/colorAccent"
+                android:backgroundTintMode="add"
                 android:orientation="vertical"
-                android:padding="5dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/release_year_label"
-                        android:layout_width="200dp"
-                        android:layout_height="wrap_content"
-                        android:text="Release year"
-                        android:textAlignment="textStart"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/game_studio_label"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:text="Game studio"
-                        android:textAlignment="textEnd"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                android:padding="15dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="top|left"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/release_year"
-                        android:layout_width="197dp"
-                        android:layout_height="25dp"
-                        android:layout_marginTop="5dp"
-                        android:background="#FFFFFF"
-                        android:gravity="left|center_vertical"
-                        android:paddingLeft="20dp"
-                        android:text="Release year: 1410"
-                        android:textAlignment="textStart" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/game_studio"
+                        <TextView
+                            android:id="@+id/release_year_label"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/jura"
+                            android:text="Release year"
+                            android:textAlignment="textStart"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/release_year"
+                            android:layout_width="197dp"
+                            android:layout_height="25dp"
+                            android:layout_marginTop="5dp"
+                            android:gravity="left|center_vertical"
+                            android:paddingLeft="20dp"
+                            android:text="Release year: 1410"
+                            android:textAlignment="textStart" />
+
+                        <TextView
+                            android:id="@+id/genres_label"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:text="Genres"
+                            android:textAlignment="textStart"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/genres"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:gravity="right|center_vertical"
+                            android:paddingLeft="20dp"
+                            android:text="CD Project Red"
+                            android:textAlignment="textStart" />
+
+                    </LinearLayout>
+
+                    <ImageButton
+                        android:id="@+id/delete_button"
                         android:layout_width="match_parent"
-                        android:layout_height="25dp"
-                        android:layout_marginTop="5dp"
-                        android:background="#FFFFFF"
-                        android:gravity="right|center_vertical"
-                        android:paddingRight="20dp"
-                        android:text="CD Project Red"
-                        android:textAlignment="textEnd" />
+                        android:layout_height="20dp"
+                        android:adjustViewBounds="false"
+                        android:background="#00FFFFFF"
+                        android:cropToPadding="false"
+                        android:scaleType="fitEnd"
+                        android:scaleX="1"
+                        android:scaleY="1"
+                        app:srcCompat="@drawable/delete" />
+
                 </LinearLayout>
 
                 <TextView
@@ -126,10 +137,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:background="#FFFFFF"
                     android:gravity="center"
                     android:text="Nice game "
                     android:textAlignment="textStart" />
+
+                <ImageView
+                    android:id="@+id/game_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:cropToPadding="false"
+                    android:scaleType="centerInside"
+                    tools:srcCompat="@tools:sample/avatars" />
 
                 <TextView
                     android:id="@+id/user_note_label"
@@ -144,7 +163,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
-                    android:background="#FFFFFF"
                     android:ems="10"
                     android:gravity="start|top"
                     android:hint="Your note here"

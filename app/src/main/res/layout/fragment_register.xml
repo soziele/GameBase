@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background2"
-    android:backgroundTint="#36000000"
+    android:backgroundTint="?attr/color"
     android:backgroundTintMode="src_over"
-    android:gravity="center"
+    android:gravity="bottom|center_horizontal"
     android:orientation="vertical"
     tools:context=".view.RegisterFragment">
 
@@ -37,10 +37,10 @@
         android:ems="10"
         android:gravity="center"
         android:hint="Full name"
-        android:inputType="textPassword" />
+        android:inputType="text" />
 
     <EditText
-        android:id="@+id/repeat_password"
+        android:id="@+id/password_register"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
@@ -53,27 +53,34 @@
         android:id="@+id/register_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="30dp"
-        android:padding="10dp"
+        android:layout_marginTop="30dp"
+        android:paddingLeft="50dp"
+        android:paddingTop="15dp"
+        android:paddingRight="50dp"
+        android:paddingBottom="15dp"
         android:text="Register" />
+
+    <Button
+        android:id="@+id/google_register_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        android:drawableBottom="@drawable/common_google_signin_btn_icon_light_normal"
+        android:elevation="5dp"
+        android:text="Or login with Google"
+        android:textAllCaps="true"
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/to_login_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="30dp"
         android:clickable="true"
         android:gravity="center"
         android:text="You already have an account? Click here"
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/google_register_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        android:background="#00FFFFFF"
-        android:drawableLeft="@drawable/common_google_signin_btn_icon_light_normal"
-        android:elevation="5dp"
-        android:text="Login with Google" />
 </LinearLayout>
