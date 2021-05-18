@@ -1,2 +1,0 @@
-Link do repozytoruim z projektem:
-https://github.com/soziele/weatherApp
